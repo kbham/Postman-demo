@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "2b8866ff-07cd-4729-a632-0ed77301ebb9",
+		"name": "Weather API Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "209984",
+		"_collection_link": "https://lunar-meadow-545338.postman.co/workspace/Postman-Enterprise-Workspace~1e1bf486-68da-426d-afba-96abb7170e83/collection/209984-2b8866ff-07cd-4729-a632-0ed77301ebb9?action=share&source=collection_link&creator=209984"
+	},
+	"item": [
+		{
+			"name": "Weather - San Francisco",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"",
+							"if (pm.response.json().current.temp_f > 65) ",
+							"{ ",
+							"    postman.setNextRequest(\"Weather - Bangalore\")",
+							"} else {",
+							"    postman.setNextRequest(\"Weather - London\")",
+							"}",
+							"});",
+							"pm.environment.set(\"temp_sfo\", pm.response.json().current.temp_f);",
+							"",
+							"pm.environment.set(\"sfo_weather_http_code\", pm.response.code)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.weatherapi.com/v1/current.json?key={{api_key}}&q=San Francisco",
+					"protocol": "https",
+					"host": [
+						"api",
+						"weatherapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"current.json"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "q",
+							"value": "San Francisco"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Weather - Bangalore",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"Weather in SFO is:\" + pm.environment.get(\"temp_sfo\")) ;"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"",
+							"",
+							"if (pm.environment.get(\"temp_sfo\") > 60)   ",
+							"{",
+							"    console.log(\"Temperature in SFO is > 60 - no need to get London Weather. Stopping Collection Runner! \");",
+							"    postman.setNextRequest(null);",
+							"} else ",
+							"{",
+							"    console.log(\"Continuing with the Collection Runner.\");",
+							"} ",
+							"})",
+							"",
+							"pm.environment.set(\"temp_bangalore\", pm.response.json().current.temp_f);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.weatherapi.com/v1/current.json?key={{api_key}}&q=Bangalore",
+					"protocol": "https",
+					"host": [
+						"api",
+						"weatherapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"current.json"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "q",
+							"value": "Bangalore"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Weather - London",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200); ",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.weatherapi.com/v1/current.json?key={{api_key}}&q=London",
+					"protocol": "https",
+					"host": [
+						"api",
+						"weatherapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"current.json"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "q",
+							"value": "London"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
